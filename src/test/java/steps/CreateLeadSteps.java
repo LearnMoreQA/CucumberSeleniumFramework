@@ -2,13 +2,12 @@ package steps;
 
 import io.cucumber.java.en.And;
 import io.cucumber.java.en.Given;
+import io.cucumber.java.en.When;
 import utils.ConfigReader;
 import utils.TestContext;
 
 public class CreateLeadSteps {
     private TestContext testContext;
-
-
     public CreateLeadSteps(TestContext testContext) {
         this.testContext = testContext;
     }
@@ -22,26 +21,37 @@ public class CreateLeadSteps {
 
     @And("user clicks CRM link in home page")
     public void userClicksOnCrmLink() {
+        testContext.getHomePage().acceptDisclaimerIfPresent();
         testContext.getHomePage().selectDiscuss();
         testContext.getHomePage().clickCrm();
     }
-
-    @And("user creates a lead in leads page")
-    public void userCreatesALead() {
+    @When("User starts to create a new lead")
+    public void userStartsToCreateANewLead() {
         testContext.getLeadsPage().clickLeads();
         testContext.getLeadsPage().clickCreateButton();
         testContext.getLeadsPage().selectClassOfInsurance();
-        testContext.getLeadsPage().enterSalesPerson();
         testContext.getLeadsPage().selectTypeOfCustomer();
-        testContext.getLeadsPage().selectExpectedClosing();
+        testContext.getLeadsPage().enterSalesPerson();
+        testContext.getLeadsPage().enterExpectedClosingDate();
+        testContext.getLeadsPage().enterFollowUpDate();
+    }
+    @And("User enters the customer information of the lead")
+    public void userEntersTheCustomerInformationOfTheLead() {
         testContext.getLeadsPage().selectCustomer();
-        testContext.getLeadsPage().vehicleMake();
+        testContext.getLeadsPage().selectEmirate();
+    }
+    @And("User enters the basic information of the lead")
+    public void userEntersTheBasicInformationOfTheLead() {
+        testContext.getLeadsPage().selectBusinessActivity();
+        testContext.getLeadsPage().selectProductType();
         testContext.getLeadsPage().clickSave();
-        String leadNumber = testContext.getLeadsPage().getLeadNumber();
-        testContext.getLeadsPage().clickLeads();
-        testContext.getLeadPiple().searchLead(leadNumber);
-        testContext.getLeadPiple().clickSearchLead();
     }
 
-
+    @And("User uploads the kyc documents in documents tab")
+    public void userUploadsTheKycDocumentsInDocumentsTab() {
+        testContext.getLeadsPage().clickDocumentsTab();
+        testContext.getLeadsPage().clickFetchDocumentListButton();
+        testContext.getLeadsPage().waitTillDocumentIsListed();
+        testContext.getLeadsPage().uploadKycDocument();
+    }
 }

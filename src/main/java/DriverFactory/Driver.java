@@ -5,6 +5,7 @@ import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.openqa.selenium.chrome.ChromeOptions;
 import org.openqa.selenium.edge.EdgeDriver;
 import org.openqa.selenium.firefox.FirefoxDriver;
 import utils.ConfigReader;
@@ -20,7 +21,10 @@ public class Driver {
         if (driver == null) {
           String browser = ConfigReader.getProperty("browser");
             if(browser.equalsIgnoreCase("Chrome")) {
-                WebDriverManager.chromedriver().setup();
+                ChromeOptions options = new ChromeOptions();
+                options.addArguments("--disable-application-cache");
+                options.addArguments("--incognito");
+               System.setProperty("webdriver.chrome.driver", "src/main/resources/drivers/chromedriver.exe");
                 driver = new ChromeDriver();
                 logger.info("ChromeDriver initialized successfully");
             } else if (browser.equalsIgnoreCase("Firefox")) {

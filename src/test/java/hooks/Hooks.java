@@ -26,17 +26,15 @@ public class Hooks {
         String appUrl = ConfigReader.getProperty("app.url");
         getDriver().get(appUrl);
         logger.info("Navigated to Application URL: {}", appUrl);
-
         getDriver().manage().timeouts().implicitlyWait(Duration.ofSeconds(10));
+        getDriver().manage().timeouts().pageLoadTimeout(Duration.ofSeconds(30));
         logger.info("Driver initialized and configured for scenario");
     }
 
     @AfterStep
     public void attachScreenshot(Scenario scenario){
-        if(scenario.isFailed()) {
             byte[] src = ((TakesScreenshot) getDriver()).getScreenshotAs(OutputType.BYTES);
             scenario.attach(src, "image/png", null);
-        }
     }
 
     @AfterAll
