@@ -23,16 +23,17 @@ public class BasePage {
     }
 
     protected void waitForClickable(WebElement element) {
-        wait = new WebDriverWait(DriverFactory.Driver.getDriver(), Duration.ofSeconds(10));
+        wait = new WebDriverWait(DriverFactory.Driver.getDriver(), Duration.ofSeconds(30));
         wait.until(ExpectedConditions.elementToBeClickable(element));
     }
 
     protected void waitForVisibilityOfElement(WebElement element) {
-        wait = new WebDriverWait(DriverFactory.Driver.getDriver(), Duration.ofSeconds(10));
+        wait = new WebDriverWait(DriverFactory.Driver.getDriver(), Duration.ofSeconds(30));
         wait.until(ExpectedConditions.visibilityOf(element));
     }
 
     protected void click(WebElement element) {
+        scrollToElement(element);
         try {
             waitForVisibilityOfElement(element);
             waitForClickable(element);
@@ -93,7 +94,7 @@ public class BasePage {
     protected void selectByIndex(WebElement element, String value) {
         try {
             waitForVisibilityOfElement(element);
-            Select select = new org.openqa.selenium.support.ui.Select(element);
+            Select select = new Select(element);
             select.selectByVisibleText(value);
             logger.info("Selected option '{}' from dropdown: {}", value, element);
         } catch (Exception e) {

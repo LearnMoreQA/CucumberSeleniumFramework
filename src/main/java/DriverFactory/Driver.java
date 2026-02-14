@@ -25,7 +25,7 @@ public class Driver {
                 options.addArguments("--disable-application-cache");
                 options.addArguments("--incognito");
                System.setProperty("webdriver.chrome.driver", "src/main/resources/drivers/chromedriver.exe");
-                driver = new ChromeDriver();
+                driver = new ChromeDriver(options);
                 logger.info("ChromeDriver initialized successfully");
             } else if (browser.equalsIgnoreCase("Firefox")) {
                 WebDriverManager.firefoxdriver().setup();

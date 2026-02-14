@@ -38,8 +38,4 @@ public class TestContext {
     public LeadsPage getLeadsPage() {
         return leadsPage;
     }
-
-    public LeadPipeline getLeadPiple() {
-        return leadPipeline;
-    }
 }

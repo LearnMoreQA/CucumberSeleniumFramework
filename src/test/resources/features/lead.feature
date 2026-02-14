@@ -8,3 +8,4 @@ Feature: Lead creation
     And User enters the customer information of the lead
     And User enters the basic information of the lead
     And User uploads the kyc documents in documents tab
+    And User imports the census file in census lines tab

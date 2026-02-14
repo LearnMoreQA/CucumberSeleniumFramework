@@ -52,6 +52,14 @@ public class CreateLeadSteps {
         testContext.getLeadsPage().clickDocumentsTab();
         testContext.getLeadsPage().clickFetchDocumentListButton();
         testContext.getLeadsPage().waitTillDocumentIsListed();
+        testContext.getLeadsPage().clickEditButton();
         testContext.getLeadsPage().uploadKycDocument();
+    }
+
+    @And("User imports the census file in census lines tab")
+    public void userImportsTheCensusFileInCensusLinesTab() {
+        testContext.getLeadsPage().clickCensusLinesTab();
+        testContext.getLeadsPage().clickImportButton();
+        testContext.getLeadsPage().uploadCensusFile();
     }
 }

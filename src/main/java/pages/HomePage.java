@@ -25,6 +25,7 @@ public class HomePage extends BasePage {
         try {
             if (disclaimerPopup.isDisplayed()) {
                 click(acceptDisclaimerButton);
+                waitForVisibilityOfElement(discussMenu);
             }
         } catch (NoSuchElementException e) {
                 logger.info("Disclaimer popup not present, proceeding without accepting.");

@@ -63,6 +63,12 @@ public class LeadsPage extends BasePage {
     @FindBy(xpath = "//td[@title='KYC Documents']/following-sibling::td/child::div[@name='document_file_id']/parent::td")
     private WebElement uploadButtonColumn;
 
+    @FindBy(xpath="//li[text()='New']")
+    private WebElement newTextHeader;
+
+    @FindBy(xpath="//button[contains(@class,'o_form_button_edit')]")
+    private WebElement editButton;
+
     /* Methods */
 
     public void clickLeads() {
@@ -70,8 +76,8 @@ public class LeadsPage extends BasePage {
     }
 
     public void clickCreateButton() {
-        waitForVisibilityOfElement(createButton);
         click(createButton);
+        waitForVisibilityOfElement(newTextHeader);
     }
 
     public void selectClassOfInsurance() {
@@ -150,8 +156,22 @@ public class LeadsPage extends BasePage {
 
     public void uploadKycDocument() {
         scrollToElement(kycDocumentsRow);
-        waitForVisibilityOfElement(kycDocumentsRow);
         click(uploadButtonColumn);
         sendKeys(uploadButton, System.getProperty("user.dir") + "/src/test/resources/testdata/pdf_testdata.pdf");
+    }
+
+    public void clickEditButton() {
+        click(editButton);
+    }
+
+     public void clickCensusLinesTab() {
+        click(censusLinesTab);
+    }
+
+    public void clickImportButton() {
+        click(importCensusLinesButton);
+        waitForVisibilityOfElement(importCensusLinesConfirmButton);
+        sendKeys(uploadYourFileButton, System.getProperty("user.dir") + "/src/test/resources/testdata/census_testdata.xlsx");
+        click(importCensusLinesConfirmButton);
     }
 }
