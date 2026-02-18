@@ -9,6 +9,9 @@ import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.Select;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
+import java.awt.*;
+import java.awt.datatransfer.StringSelection;
+import java.awt.event.KeyEvent;
 import java.time.Duration;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
@@ -30,6 +33,11 @@ public class BasePage {
     protected void waitForVisibilityOfElement(WebElement element) {
         wait = new WebDriverWait(DriverFactory.Driver.getDriver(), Duration.ofSeconds(30));
         wait.until(ExpectedConditions.visibilityOf(element));
+    }
+
+    protected void waitForInvisibilityOfElement(WebElement element) {
+        wait = new WebDriverWait(DriverFactory.Driver.getDriver(), Duration.ofSeconds(30));
+        wait.until(ExpectedConditions.invisibilityOf(element));
     }
 
     protected void click(WebElement element) {
@@ -158,6 +166,26 @@ public class BasePage {
         } catch (Exception e) {
             logger.error("Failed to scroll to element: {}", element, e);
             throw new RuntimeException("Unable to scroll to element: " + e);
+        }
+    }
+
+    protected void uploadFileUsingRobot() {
+        try {
+            Robot robot = new Robot();
+            robot.delay(5000);
+
+            StringSelection filePath = new StringSelection(System.getProperty("user.dir") + "\\src\\test\\resources\\testdata\\excel_testdata.xlsx");
+            Toolkit.getDefaultToolkit().getSystemClipboard().setContents(filePath, null);
+
+            robot.keyPress(KeyEvent.VK_CONTROL);
+            robot.keyPress(KeyEvent.VK_V);
+            robot.keyRelease(KeyEvent.VK_V);
+            robot.keyRelease(KeyEvent.VK_CONTROL);
+
+            robot.keyPress(KeyEvent.VK_ENTER);
+            robot.keyRelease(KeyEvent.VK_ENTER);
+        } catch (AWTException e) {
+            throw new RuntimeException("Failed to upload file using Robot: " + e);
         }
     }
 }

@@ -59,7 +59,6 @@ public class CreateLeadSteps {
     @And("User imports the census file in census lines tab")
     public void userImportsTheCensusFileInCensusLinesTab() {
         testContext.getLeadsPage().clickCensusLinesTab();
-        testContext.getLeadsPage().clickImportButton();
         testContext.getLeadsPage().uploadCensusFile();
     }
 }

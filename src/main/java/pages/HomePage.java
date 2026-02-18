@@ -32,6 +32,7 @@ public class HomePage extends BasePage {
         }
     }
     public void selectDiscuss() {
+        waitForVisibilityOfElement(discussMenu);
         click(discussMenu);
     }
 
