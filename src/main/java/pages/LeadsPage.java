@@ -2,16 +2,9 @@ package pages;
 
 import DriverFactory.Driver;
 import org.openqa.selenium.By;
-import org.openqa.selenium.JavascriptExecutor;
+import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
-import org.openqa.selenium.support.ui.ExpectedConditions;
-import org.openqa.selenium.support.ui.WebDriverWait;
-
-import java.awt.*;
-import java.awt.datatransfer.StringSelection;
-import java.awt.event.KeyEvent;
-import java.time.Duration;
 
 public class LeadsPage extends BasePage {
 
@@ -51,9 +44,7 @@ public class LeadsPage extends BasePage {
     @FindBy(xpath = "//td[text()='KYC Documents']")
     private WebElement kycDocumentsRow;
     @FindBy(xpath = "//td[@title='KYC Documents']/following-sibling::td/child::div[@name='document_file_id']//button/following-sibling::input")
-    private WebElement uploadFile;
-    @FindBy(xpath = "//span[@class='o_attachment_name']")
-    private WebElement uploadedFileName;
+    private WebElement kycUploadFile;
     @FindBy(xpath = "//a[text()='Census Lines']")
     private WebElement censusLinesTab;
     @FindBy(xpath = "//button[@name='import_medical_census_wizard']")
@@ -74,6 +65,88 @@ public class LeadsPage extends BasePage {
     private WebElement editButton;
     @FindBy(xpath = "//li[text()='Leads']")
     private WebElement leadsTextHeader;
+    @FindBy(xpath = "//span[text()='Convert to Opportunity']/parent::button")
+    private WebElement convertToOpportunityButton;
+    @FindBy(xpath = "//span[text()='New Quotation']/parent::button")
+    private WebElement newQuotationButton;
+    @FindBy(xpath = "//input[@name='expected_premium']")
+    private WebElement expectedPremiumField;
+    @FindBy(xpath = "//input[@name='expected_revenue']")
+    private WebElement expectedRevenueField;
+    @FindBy(xpath = "//div[@name='underwriter_id']/child::div/input")
+    private WebElement underwriterField;
+    @FindBy(xpath = "//input[@name='policy_expiry_date']")
+    private WebElement policyExpiryDateField;
+    @FindBy(name = "payment_type")
+    private WebElement paymentTypeDropdown;
+    @FindBy(xpath = "//div[@name='payment_term_id']/child::div/input")
+    private WebElement paymentTermField;
+    @FindBy(name = "quote_from_ai")
+    private WebElement quoteFromAIDropdown;
+    @FindBy(xpath = "//a[text()='Add a section']/preceding-sibling::a[text()='Add a product']")
+    private WebElement addProductButton;
+    @FindBy(xpath = "//div[@name='insurer_id']/child::div/input")
+    private WebElement insurerField;
+    @FindBy(xpath = "//div[@name='product_id']/child::div/input")
+    private WebElement productField;
+    @FindBy(xpath = "//div[@name='category_id']/child::div/input")
+    private WebElement categoryField;
+    @FindBy(xpath = "//span[text()='Save & Close']/parent::button")
+    private WebElement saveAndCloseButton;
+    @FindBy(xpath = "//span[text()='Confirm Quotation']/parent::button")
+    private WebElement confirmQuotationButton;
+    @FindBy(xpath = "//button[@name='do_confirm_sale_order']")
+    private WebElement confirmOrderButton;
+    @FindBy(xpath = "//label[text()='Operation Type']")
+    private WebElement operationTypeLabel;
+    @FindBy(xpath = "//h4[text()='Confirmation']")
+    private WebElement confirmationPopupHeader;
+    @FindBy(xpath = "//span[text()='Ok']/parent::button")
+    private WebElement confirmationPopupOkButton;
+    @FindBy(xpath = "//a[text()='Other Info']")
+    private WebElement otherInfoTab;
+    @FindBy(xpath = "//a[text()='Order Lines']")
+    private WebElement orderLinesTab;
+    @FindBy(xpath = "//span[text()='Direct']/parent::button")
+    private WebElement directButton;
+    @FindBy(xpath = "//div[@name='attachment_type_id']/child::div/input")
+    private WebElement attachmentTypeDropdown;
+    @FindBy(xpath = "//div[text()='Direct Payment Details']")
+    private WebElement directPaymentDetailsSection;
+    @FindBy(xpath = "//div[text()='Direct Payment Details']/following::span[text()='Confirm']/parent::button")
+    private WebElement confirmDirectPaymentButton;
+    @FindBy(xpath = "(//a[text()='Add a line'])[4]")
+    private WebElement addPaymentLineButton;
+    @FindBy(xpath = "//div[@name='document_id']/child::div/input")
+    private WebElement documentDropdown;
+    @FindBy(xpath = "//li[@class='breadcrumb-item active']")
+    private WebElement breadcrumb;
+    @FindBy(xpath = "//span[text()='Policy']/parent::div")
+    private WebElement policyMenu;
+    @FindBy(xpath = "//span[text()='Issue Policy']/parent::button")
+    private WebElement issuePolicyButton;
+    @FindBy(xpath = "//span[text()='Reconcile']/parent::button")
+    private WebElement reconcileButton;
+    @FindBy(name = "policy_number")
+    private WebElement policyNumberField;
+    @FindBy(name = "start_date")
+    private WebElement policyStartDateField;
+    @FindBy(name = "end_date")
+    private WebElement policyEndDateField;
+    @FindBy(name = "invoice_number")
+    private WebElement invoiceNumberField;
+    @FindBy(name = "invoice_date")
+    private WebElement invoiceDateField;
+    @FindBy(xpath = "//div[@name='sale_support_uw_id']/child::div/input")
+    private WebElement saleSupportUnderwriterField;
+    @FindBy(xpath = "//div[@name='closing_document_ids']/preceding::a[text()='Add a line']")
+    private WebElement policyDocAddButton;
+    @FindBy(xpath = "//button[contains(@class,'o_upload_button')]/following-sibling::input")
+    private WebElement policyDocUploadFileButton;
+    @FindBy(xpath = "//span[text()='Invoice']/parent::button")
+    private WebElement invoiceButton;
+    @FindBy(xpath = "//span[text()='Send']/parent::button")
+    private WebElement sendButton;
 
     /* Methods */
     public void clickLeads() {
@@ -84,14 +157,16 @@ public class LeadsPage extends BasePage {
     public void clickCreateButton() {
         click(createButton);
         waitForVisibilityOfElement(newTextHeader);
+        waitForLoadingToDisappear(loadingIndicator);
     }
 
     public void selectClassOfInsurance() {
-        selectByIndex(classOfInsuranceDropdown, "Medical");
+        waitForLoadingToDisappear(loadingIndicator);
+        selectDropdown(classOfInsuranceDropdown, "Medical");
     }
 
     public void selectTypeOfCustomer() {
-        selectByIndex(typeOfCustomerDropdown, "Company");
+        selectDropdown(typeOfCustomerDropdown, "Company");
     }
 
     public void enterSalesPerson() {
@@ -103,6 +178,7 @@ public class LeadsPage extends BasePage {
     }
 
     public void clickSave() {
+        waitForLoadingToDisappear(loadingIndicator);
         click(saveButton);
         waitForLoadingToDisappear(loadingIndicator);
     }
@@ -163,14 +239,13 @@ public class LeadsPage extends BasePage {
     public void uploadKycDocument() {
         scrollToElement(kycDocumentsRow);
         click(uploadButtonColumn);
-        JavascriptExecutor js = (JavascriptExecutor) Driver.getDriver();
-        js.executeScript("arguments[0].style.display='block';", uploadFile);
-        sendKeys(uploadFile, System.getProperty("user.dir") + "/src/test/resources/testdata/pdf_testdata.pdf");
-        waitForInvisibilityOfElement(uploadFile);
+        uploadFileUsingJs(kycUploadFile, "pdf_testdata.pdf");
+        waitForInvisibilityOfElement(kycUploadFile);
     }
 
     public void clickEditButton() {
         click(editButton);
+        waitForLoadingToDisappear(loadingIndicator);
     }
 
     public void clickCensusLinesTab() {
@@ -181,7 +256,175 @@ public class LeadsPage extends BasePage {
         click(importCensusLinesButton);
         waitForVisibilityOfElement(importButton);
         click(uploadYourFileButton);
-        uploadFileUsingRobot();
-        jsClick(importButton);
+        uploadFileUsingRobot("census_testdata.xlsx");
+        waitForVisibilityOfElement(importButton);
+        click(importButton);
+        waitForInvisibilityOfElement(importButton);
+    }
+
+    public void selectUnderwriter() {
+        enterAndSelectTheText(underwriterField, "ADHIL SHAFI");
+    }
+
+    public void enterPolicyExpiryDate() {
+        selectDate(policyExpiryDateField, 30);
+    }
+    public void enterExpectedPremium() {
+        clearText(expectedPremiumField);
+        sendKeys(expectedPremiumField, "1.00");
+    }
+    public void enterExpectedRevenue() {
+        clearText(expectedRevenueField);
+        sendKeys(expectedRevenueField, "1.00");
+    }
+    public void clickConvertToOpportunity() {
+        click(convertToOpportunityButton);
+    }
+    public void clickNewQuotation() {
+        waitForLoadingToDisappear(loadingIndicator);
+        click(newQuotationButton);
+    }
+    public void clickAddProduct() {
+        click(addProductButton);
+    }
+    public void selectPaymentType(String value) {
+        selectDropdown(paymentTypeDropdown, value);
+    }
+    public void enterPaymentTerm(String value) {
+        enterAndSelectTheText(paymentTermField, value);
+    }
+    public void selectQuoteFromAI(String value) {
+        selectDropdown(quoteFromAIDropdown, value);
+    }
+    public void selectInsurer(String insurer) {
+        enterAndSelectTheText(insurerField, insurer);
+    }
+    public void selectProduct(String product) {
+        enterAndSelectTheText(productField, product);
+    }
+    public void selectCategory(String category) {
+        selectOptionFromCustomDropdown(categoryField, category);
+    }
+    public void clickOtherInfoTab() {
+        click(otherInfoTab);
+    }
+    public void clickSaveAndCloseButton() {
+        click(saveAndCloseButton);
+        waitForInvisibilityOfElement(saveAndCloseButton);
+        waitForLoadingToDisappear(loadingIndicator);
+    }
+    public void completeQuotation() {
+        waitForLoadingToDisappear(loadingIndicator);
+        selectPaymentType("Direct");
+        enterPaymentTerm("Immediate Payment");
+        waitForLoadingToDisappear(loadingIndicator);
+        selectQuoteFromAI("No");
+    }
+    public void completeOrderLineDetails() {
+        click(orderLinesTab);
+        waitForVisibilityOfElement(addProductButton);
+        clickAddProduct();
+        selectInsurer("INSURANCE HOUSE PSC");
+        waitForLoadingToDisappear(loadingIndicator);
+        selectProduct("Group Medical");
+        selectCategory("A");
+        clickSaveAndCloseButton();
+        clickOtherInfoTab();
+        enterAndSelectTheText(underwriterField, "Karthika Lakshmi B");
+        click(saveButton);
+        waitForLoadingToDisappear(loadingIndicator);
+    }
+    public void clickConfirmQuotation() {
+        click(confirmQuotationButton);
+        waitForLoadingToDisappear(loadingIndicator);
+    }
+    public void clickConfirmOrder() {
+        waitForVisibilityOfElement(operationTypeLabel);
+        click(confirmOrderButton);
+    }
+    public void confirmTheOrderInPopup() {
+        waitForVisibilityOfElement(confirmationPopupHeader);
+        click(confirmationPopupOkButton);
+        waitForLoadingToDisappear(loadingIndicator);
+        waitForInvisibilityOfElement(confirmationPopupOkButton);
+    }
+    public void completeQuotationProcess() {
+        clickConfirmQuotation();
+        clickConfirmOrder();
+        confirmTheOrderInPopup();
+    }
+    public void uploadPaymentReceipt() {
+        click(addPaymentLineButton);
+        enterAndSelectTheText(documentDropdown, "Payment Receipt");
+        click(breadcrumb);
+        By uploadFileInputLocator = By.xpath("//td[@title='Payment Receipt']/following-sibling::td/child::div[@name='document_file_id']//button/following-sibling::input");
+        WebElement elePaymentUploadFile = Driver.getDriver().findElement(uploadFileInputLocator);
+        waitForPresenceOfElement(uploadFileInputLocator);
+        uploadFileUsingJs(elePaymentUploadFile, "pdf_testdata.pdf");
+        waitForInvisibilityOfElement(elePaymentUploadFile);
+    }
+    public void clickDirectButton() {
+        click(directButton);
+        waitForVisibilityOfElement(directPaymentDetailsSection);
+    }
+    public void clickConfirmDirectPaymentButton() {
+        click(confirmDirectPaymentButton);
+        waitForInvisibilityOfElement(confirmDirectPaymentButton);
+        waitForLoadingToDisappear(loadingIndicator);
+    }
+    public void selectAttachmentType(String attachmentType) {
+        enterAndSelectTheText(attachmentTypeDropdown, attachmentType);
+    }
+    public void completeDirectPayment() {
+        clickDirectButton();
+        selectAttachmentType("payment proof");
+        click(uploadYourFileButton);
+        uploadFileUsingRobot("pdf_testdata.pdf");
+        waitForVisibilityOfElement(confirmDirectPaymentButton);
+        clickConfirmDirectPaymentButton();
+    }
+    public void clickPolicyMenu() {
+        click(policyMenu);
+        waitForLoadingToDisappear(loadingIndicator);
+    }
+    public void clickIssuePolicyButton() {
+        click(issuePolicyButton);
+        waitForLoadingToDisappear(loadingIndicator);
+    }
+    public void clickReconcileButton() {
+        click(reconcileButton);
+        waitForLoadingToDisappear(loadingIndicator);
+    }
+    public void completePolicyDetails() {
+        sendKeys(policyNumberField, generateRandomNumber(7));
+        scrollToElement(policyNumberField);
+        sendKeys(invoiceNumberField, generateRandomNumber(7));
+        enterSaleSupportUnderwriter();
+        selectCustomDate(policyStartDateField, 1);
+        waitForLoadingToDisappear(loadingIndicator);
+        if (policyEndDateField.getText() == null) {
+            selectCustomDate(policyEndDateField, 365);
+        }
+        selectCustomDate(invoiceDateField, 0);
+    }
+    public void enterSaleSupportUnderwriter() {
+        enterAndSelectTheText(saleSupportUnderwriterField,"Karthika Lakshmi B");
+    }
+    public void uploadPolicyDocument() {
+        click(policyDocAddButton);
+        enterAndSelectTheText(documentDropdown, "Loss report");
+        waitForLoadingToDisappear(loadingIndicator);
+        uploadFileUsingJs(policyDocUploadFileButton,"pdf_testdata.pdf");
+        waitForInvisibilityOfElement(policyDocUploadFileButton);
+        waitForLoadingToDisappear(loadingIndicator);
+    }
+    public void clickInvoiceButton() {
+        click(invoiceButton);
+        waitForLoadingToDisappear(loadingIndicator);
+    }
+    public void clickSendButton() {
+        click(sendButton);
+        waitForLoadingToDisappear(loadingIndicator);
+        waitForInvisibilityOfElement(sendButton);
     }
 }

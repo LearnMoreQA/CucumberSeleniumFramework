@@ -22,7 +22,6 @@ public class Hooks {
     public void setUp() {
         getDriver();
         getDriver().manage().window().maximize();
-
         String appUrl = ConfigReader.getProperty("app.url");
         getDriver().get(appUrl);
         logger.info("Navigated to Application URL: {}", appUrl);

@@ -4,6 +4,7 @@ import DriverFactory.Driver;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.openqa.selenium.*;
+import org.openqa.selenium.interactions.Actions;
 import org.openqa.selenium.support.PageFactory;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.Select;
@@ -53,7 +54,7 @@ public class BasePage {
         }
     }
 
-    private void setFocus(WebElement element){
+    protected void setFocus(WebElement element) {
         try {
             waitForVisibilityOfElement(element);
             JavascriptExecutor jse = (JavascriptExecutor) Driver.getDriver();
@@ -99,12 +100,19 @@ public class BasePage {
         }
     }
 
-    protected void selectByIndex(WebElement element, String value) {
+    protected void selectDropdown(WebElement element, String value) {
         try {
             waitForVisibilityOfElement(element);
             Select select = new Select(element);
             select.selectByVisibleText(value);
             logger.info("Selected option '{}' from dropdown: {}", value, element);
+        } catch (StaleElementReferenceException sere) {
+            logger.warn("StaleElementReferenceException caught while selecting dropdown. Retrying...", sere);
+            WebElement refreshedElement = Driver.getDriver().findElement(By.xpath(getElementXPath(element)));
+            waitForVisibilityOfElement(refreshedElement);
+            Select select = new Select(refreshedElement);
+            select.selectByVisibleText(value);
+            logger.info("Selected option '{}' from dropdown after retry: {}", value, refreshedElement);
         } catch (Exception e) {
             throw new RuntimeException("Unable to select option from dropdown: " + e);
         }
@@ -114,8 +122,8 @@ public class BasePage {
         return (long) Math.floor(Math.random() * 9_000_000_000L) + 1_000_000_000L;
     }
 
-    protected void enterAndSelectTheText(WebElement element, String text){
-        try{
+    protected void enterAndSelectTheText(WebElement element, String text) {
+        try {
             waitForVisibilityOfElement(element);
             sendKeys(element, text);
             WebElement ele = Driver.getDriver().findElement(By.xpath("//a[contains(text(),'" + text + "')]"));
@@ -129,7 +137,7 @@ public class BasePage {
 
     protected void waitForLoadingToDisappear(WebElement loadingIndicator) {
         try {
-            WebDriverWait wait = new WebDriverWait(Driver.getDriver(), Duration.ofSeconds(30));
+            WebDriverWait wait = new WebDriverWait(Driver.getDriver(), Duration.ofSeconds(60));
             wait.until(ExpectedConditions.invisibilityOf(loadingIndicator));
             logger.info("Loading spinner has disappeared.");
         } catch (Exception e) {
@@ -141,13 +149,14 @@ public class BasePage {
     protected void selectDate(WebElement datePicker, int daysToAdd) {
         LocalDate date;
         scrollToElement(datePicker);
+        String formattedDate = null;
         try {
-            if(daysToAdd > 0) {
-                 date = LocalDate.now().plusDays(daysToAdd);
+            if (daysToAdd > 0) {
+                date = LocalDate.now().plusDays(daysToAdd);
             } else {
                 date = LocalDate.now();
             }
-            String formattedDate = date.format(DateTimeFormatter.ofPattern("dd/MM/yyyy"));
+            formattedDate = date.format(DateTimeFormatter.ofPattern("dd/MM/yyyy"));
             click(datePicker);
             datePicker.clear();
             sendKeys(datePicker, formattedDate);
@@ -169,12 +178,12 @@ public class BasePage {
         }
     }
 
-    protected void uploadFileUsingRobot() {
+    protected void uploadFileUsingRobot(String fileName) {
         try {
             Robot robot = new Robot();
             robot.delay(5000);
 
-            StringSelection filePath = new StringSelection(System.getProperty("user.dir") + "\\src\\test\\resources\\testdata\\excel_testdata.xlsx");
+            StringSelection filePath = new StringSelection(System.getProperty("user.dir") + "\\src\\test\\resources\\testdata\\" + fileName);
             Toolkit.getDefaultToolkit().getSystemClipboard().setContents(filePath, null);
 
             robot.keyPress(KeyEvent.VK_CONTROL);
@@ -186,6 +195,104 @@ public class BasePage {
             robot.keyRelease(KeyEvent.VK_ENTER);
         } catch (AWTException e) {
             throw new RuntimeException("Failed to upload file using Robot: " + e);
+        }
+    }
+
+    protected void clearText(WebElement element) {
+        try {
+            waitForVisibilityOfElement(element);
+            element.clear();
+            logger.info("Cleared text from element: {}", element);
+        } catch (Exception e) {
+            throw new RuntimeException("Unable to clear text from element: " + e);
+        }
+    }
+
+    public void waitForPresenceOfElement(By locator) {
+        try {
+            WebDriverWait wait = new WebDriverWait(Driver.getDriver(), Duration.ofSeconds(30));
+            wait.until(ExpectedConditions.presenceOfElementLocated(locator));
+            logger.info("Element located by {} is present in the DOM.", locator);
+        } catch (Exception e) {
+            logger.error("Element located by {} was not found within the timeout.", locator, e);
+            throw new RuntimeException("Element not found: " + e);
+        }
+    }
+
+    protected void uploadFileUsingJs(WebElement element, String fileName) {
+        try {
+            JavascriptExecutor js = (JavascriptExecutor) Driver.getDriver();
+            js.executeScript("arguments[0].style.display='block';", element);
+            element.sendKeys(System.getProperty("user.dir") + "/src/test/resources/testdata/" + fileName);
+            logger.info("Uploaded file '{}' using element: {}", fileName, element);
+        } catch (Exception e) {
+            logger.error("Failed to upload file '{}' using element: {}", fileName, element, e);
+            throw new RuntimeException("Unable to upload file: " + e);
+        }
+    }
+
+    private String getElementXPath(WebElement element) {
+        String jsCode = "function getElementXPath(elt){" +
+                "var path = '';" +
+                "while(elt.nodeType === Node.ELEMENT_NODE){" +
+                "var siblingIndex = 1;" +
+                "var sibling = elt.previousSibling;" +
+                "while(sibling){" +
+                "if(sibling.nodeType === Node.ELEMENT_NODE && sibling.tagName === elt.tagName){" +
+                "siblingIndex++;" +
+                "}" +
+                "sibling = sibling.previousSibling;" +
+                "}" +
+                "path = '/' + elt.tagName + '[' + siblingIndex + ']' + path;" +
+                "elt = elt.parentNode;" +
+                "}" +
+                "return path.toLowerCase();" +
+                "} return getElementXPath(arguments[0]);";
+        return (String) ((JavascriptExecutor) Driver.getDriver()).executeScript(jsCode, element);
+    }
+
+    public String generateRandomNumber(int length) {
+        String characters = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+        StringBuilder randomString = new StringBuilder();
+        for (int i = 0; i < length; i++) {
+            int index = (int) (Math.random() * characters.length());
+            randomString.append(characters.charAt(index));
+        }
+        logger.info("Generated random string '{}'", randomString);
+        return randomString.toString();
+    }
+
+    public void selectOptionFromCustomDropdown(WebElement dropdown, String optionText) {
+        try {
+            click(dropdown);
+            WebElement option = Driver.getDriver().findElement(By.xpath("//a[text()='" + optionText + "']"));
+            waitForVisibilityOfElement(option);
+            click(option);
+            logger.info("Selected option '{}' from custom dropdown.", optionText);
+        } catch (Exception e) {
+            logger.error("Failed to select option '{}' from custom dropdown.", optionText, e);
+            throw new RuntimeException("Unable to select option from custom dropdown: " + e);
+        }
+    }
+
+    protected void selectCustomDate(WebElement datePicker, int daysToAdd) {
+        try {
+            LocalDate date = daysToAdd > 0 ? LocalDate.now().plusDays(daysToAdd) : LocalDate.now();
+            String formattedDate = date.format(DateTimeFormatter.ofPattern("dd/MM/yyyy"));
+
+            scrollToElement(datePicker);
+            click(datePicker);
+
+            Actions actions = new Actions(Driver.getDriver());
+            actions.moveToElement(datePicker)
+                    .click()
+                    .sendKeys(formattedDate)
+                    .perform();
+
+            logger.info("Selected date: {}", formattedDate);
+        } catch (Exception e) {
+            logger.error("Failed to select date in the date picker.", e);
+            throw new RuntimeException("Error while selecting date: " + e);
         }
     }
 }

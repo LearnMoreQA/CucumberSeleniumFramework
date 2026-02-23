@@ -33,6 +33,10 @@ public class CreateLeadSteps {
         testContext.getLeadsPage().selectTypeOfCustomer();
         testContext.getLeadsPage().enterSalesPerson();
         testContext.getLeadsPage().enterExpectedClosingDate();
+        testContext.getLeadsPage().enterExpectedPremium();
+        testContext.getLeadsPage().enterExpectedRevenue();
+        testContext.getLeadsPage().selectUnderwriter();
+        testContext.getLeadsPage().enterPolicyExpiryDate();
         testContext.getLeadsPage().enterFollowUpDate();
     }
     @And("User enters the customer information of the lead")
@@ -54,11 +58,39 @@ public class CreateLeadSteps {
         testContext.getLeadsPage().waitTillDocumentIsListed();
         testContext.getLeadsPage().clickEditButton();
         testContext.getLeadsPage().uploadKycDocument();
+        testContext.getLeadsPage().uploadPaymentReceipt();
     }
 
     @And("User imports the census file in census lines tab")
     public void userImportsTheCensusFileInCensusLinesTab() {
         testContext.getLeadsPage().clickCensusLinesTab();
         testContext.getLeadsPage().uploadCensusFile();
+    }
+
+    @And("User starts the quotation process")
+    public void userStartsTheQuotationProcess() {
+        testContext.getLeadsPage().clickConvertToOpportunity();
+        testContext.getLeadsPage().clickNewQuotation();
+        testContext.getLeadsPage().completeQuotation();
+        testContext.getLeadsPage().completeOrderLineDetails();
+        testContext.getLeadsPage().completeQuotationProcess();
+    }
+
+    @And("user proceeds to the direct payment")
+    public void userProceedsToTheDirectPayment() {
+        testContext.getLeadsPage().completeDirectPayment();
+    }
+
+    @And("user proceeds the Issue Policy")
+    public void userProceedsTheIssuePolicy() {
+        testContext.getLeadsPage().clickPolicyMenu();
+        testContext.getLeadsPage().clickIssuePolicyButton();
+        testContext.getLeadsPage().clickEditButton();
+        testContext.getLeadsPage().completePolicyDetails();
+        testContext.getLeadsPage().uploadPolicyDocument();
+        testContext.getLeadsPage().clickSave();
+        testContext.getLeadsPage().clickReconcileButton();
+        testContext.getLeadsPage().clickInvoiceButton();
+        testContext.getLeadsPage().clickSendButton();
     }
 }
