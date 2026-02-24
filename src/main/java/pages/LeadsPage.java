@@ -73,54 +73,8 @@ public class LeadsPage extends BasePage {
     private WebElement expectedPremiumField;
     @FindBy(xpath = "//input[@name='expected_revenue']")
     private WebElement expectedRevenueField;
-    @FindBy(xpath = "//div[@name='underwriter_id']/child::div/input")
-    private WebElement underwriterField;
     @FindBy(xpath = "//input[@name='policy_expiry_date']")
     private WebElement policyExpiryDateField;
-    @FindBy(name = "payment_type")
-    private WebElement paymentTypeDropdown;
-    @FindBy(xpath = "//div[@name='payment_term_id']/child::div/input")
-    private WebElement paymentTermField;
-    @FindBy(name = "quote_from_ai")
-    private WebElement quoteFromAIDropdown;
-    @FindBy(xpath = "//a[text()='Add a section']/preceding-sibling::a[text()='Add a product']")
-    private WebElement addProductButton;
-    @FindBy(xpath = "//div[@name='insurer_id']/child::div/input")
-    private WebElement insurerField;
-    @FindBy(xpath = "//div[@name='product_id']/child::div/input")
-    private WebElement productField;
-    @FindBy(xpath = "//div[@name='category_id']/child::div/input")
-    private WebElement categoryField;
-    @FindBy(xpath = "//span[text()='Save & Close']/parent::button")
-    private WebElement saveAndCloseButton;
-    @FindBy(xpath = "//span[text()='Confirm Quotation']/parent::button")
-    private WebElement confirmQuotationButton;
-    @FindBy(xpath = "//button[@name='do_confirm_sale_order']")
-    private WebElement confirmOrderButton;
-    @FindBy(xpath = "//label[text()='Operation Type']")
-    private WebElement operationTypeLabel;
-    @FindBy(xpath = "//h4[text()='Confirmation']")
-    private WebElement confirmationPopupHeader;
-    @FindBy(xpath = "//span[text()='Ok']/parent::button")
-    private WebElement confirmationPopupOkButton;
-    @FindBy(xpath = "//a[text()='Other Info']")
-    private WebElement otherInfoTab;
-    @FindBy(xpath = "//a[text()='Order Lines']")
-    private WebElement orderLinesTab;
-    @FindBy(xpath = "//span[text()='Direct']/parent::button")
-    private WebElement directButton;
-    @FindBy(xpath = "//div[@name='attachment_type_id']/child::div/input")
-    private WebElement attachmentTypeDropdown;
-    @FindBy(xpath = "//div[text()='Direct Payment Details']")
-    private WebElement directPaymentDetailsSection;
-    @FindBy(xpath = "//div[text()='Direct Payment Details']/following::span[text()='Confirm']/parent::button")
-    private WebElement confirmDirectPaymentButton;
-    @FindBy(xpath = "(//a[text()='Add a line'])[4]")
-    private WebElement addPaymentLineButton;
-    @FindBy(xpath = "//div[@name='document_id']/child::div/input")
-    private WebElement documentDropdown;
-    @FindBy(xpath = "//li[@class='breadcrumb-item active']")
-    private WebElement breadcrumb;
     @FindBy(xpath = "//span[text()='Policy']/parent::div")
     private WebElement policyMenu;
     @FindBy(xpath = "//span[text()='Issue Policy']/parent::button")
@@ -147,6 +101,16 @@ public class LeadsPage extends BasePage {
     private WebElement invoiceButton;
     @FindBy(xpath = "//span[text()='Send']/parent::button")
     private WebElement sendButton;
+    @FindBy(xpath = "//div[@name='underwriter_id']/child::div/input")
+    private WebElement underwriterField;
+
+    @FindBy(xpath = "(//a[text()='Add a line'])[4]")
+    private WebElement addPaymentLineButton;
+    @FindBy(xpath = "//div[@name='document_id']/child::div/input")
+    private WebElement documentDropdown;
+    @FindBy(xpath = "//li[@class='breadcrumb-item active']")
+    private WebElement breadcrumb;
+
 
     /* Methods */
     public void clickLeads() {
@@ -284,75 +248,6 @@ public class LeadsPage extends BasePage {
         waitForLoadingToDisappear(loadingIndicator);
         click(newQuotationButton);
     }
-    public void clickAddProduct() {
-        click(addProductButton);
-    }
-    public void selectPaymentType(String value) {
-        selectDropdown(paymentTypeDropdown, value);
-    }
-    public void enterPaymentTerm(String value) {
-        enterAndSelectTheText(paymentTermField, value);
-    }
-    public void selectQuoteFromAI(String value) {
-        selectDropdown(quoteFromAIDropdown, value);
-    }
-    public void selectInsurer(String insurer) {
-        enterAndSelectTheText(insurerField, insurer);
-    }
-    public void selectProduct(String product) {
-        enterAndSelectTheText(productField, product);
-    }
-    public void selectCategory(String category) {
-        selectOptionFromCustomDropdown(categoryField, category);
-    }
-    public void clickOtherInfoTab() {
-        click(otherInfoTab);
-    }
-    public void clickSaveAndCloseButton() {
-        click(saveAndCloseButton);
-        waitForInvisibilityOfElement(saveAndCloseButton);
-        waitForLoadingToDisappear(loadingIndicator);
-    }
-    public void completeQuotation() {
-        waitForLoadingToDisappear(loadingIndicator);
-        selectPaymentType("Direct");
-        enterPaymentTerm("Immediate Payment");
-        waitForLoadingToDisappear(loadingIndicator);
-        selectQuoteFromAI("No");
-    }
-    public void completeOrderLineDetails() {
-        click(orderLinesTab);
-        waitForVisibilityOfElement(addProductButton);
-        clickAddProduct();
-        selectInsurer("INSURANCE HOUSE PSC");
-        waitForLoadingToDisappear(loadingIndicator);
-        selectProduct("Group Medical");
-        selectCategory("A");
-        clickSaveAndCloseButton();
-        clickOtherInfoTab();
-        enterAndSelectTheText(underwriterField, "Karthika Lakshmi B");
-        click(saveButton);
-        waitForLoadingToDisappear(loadingIndicator);
-    }
-    public void clickConfirmQuotation() {
-        click(confirmQuotationButton);
-        waitForLoadingToDisappear(loadingIndicator);
-    }
-    public void clickConfirmOrder() {
-        waitForVisibilityOfElement(operationTypeLabel);
-        click(confirmOrderButton);
-    }
-    public void confirmTheOrderInPopup() {
-        waitForVisibilityOfElement(confirmationPopupHeader);
-        click(confirmationPopupOkButton);
-        waitForLoadingToDisappear(loadingIndicator);
-        waitForInvisibilityOfElement(confirmationPopupOkButton);
-    }
-    public void completeQuotationProcess() {
-        clickConfirmQuotation();
-        clickConfirmOrder();
-        confirmTheOrderInPopup();
-    }
     public void uploadPaymentReceipt() {
         click(addPaymentLineButton);
         enterAndSelectTheText(documentDropdown, "Payment Receipt");
@@ -363,26 +258,7 @@ public class LeadsPage extends BasePage {
         uploadFileUsingJs(elePaymentUploadFile, "pdf_testdata.pdf");
         waitForInvisibilityOfElement(elePaymentUploadFile);
     }
-    public void clickDirectButton() {
-        click(directButton);
-        waitForVisibilityOfElement(directPaymentDetailsSection);
-    }
-    public void clickConfirmDirectPaymentButton() {
-        click(confirmDirectPaymentButton);
-        waitForInvisibilityOfElement(confirmDirectPaymentButton);
-        waitForLoadingToDisappear(loadingIndicator);
-    }
-    public void selectAttachmentType(String attachmentType) {
-        enterAndSelectTheText(attachmentTypeDropdown, attachmentType);
-    }
-    public void completeDirectPayment() {
-        clickDirectButton();
-        selectAttachmentType("payment proof");
-        click(uploadYourFileButton);
-        uploadFileUsingRobot("pdf_testdata.pdf");
-        waitForVisibilityOfElement(confirmDirectPaymentButton);
-        clickConfirmDirectPaymentButton();
-    }
+
     public void clickPolicyMenu() {
         click(policyMenu);
         waitForLoadingToDisappear(loadingIndicator);

@@ -71,14 +71,14 @@ public class CreateLeadSteps {
     public void userStartsTheQuotationProcess() {
         testContext.getLeadsPage().clickConvertToOpportunity();
         testContext.getLeadsPage().clickNewQuotation();
-        testContext.getLeadsPage().completeQuotation();
-        testContext.getLeadsPage().completeOrderLineDetails();
-        testContext.getLeadsPage().completeQuotationProcess();
+        testContext.getQuotePage().completeQuotation();
+        testContext.getQuotePage().completeOrderLineDetails();
+        testContext.getQuotePage().completeQuotationProcess();
     }
 
     @And("user proceeds to the direct payment")
     public void userProceedsToTheDirectPayment() {
-        testContext.getLeadsPage().completeDirectPayment();
+        testContext.getQuotePage().completeDirectPayment();
     }
 
     @And("user proceeds the Issue Policy")

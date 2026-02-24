@@ -5,16 +5,19 @@ import pages.HomePage;
 import pages.LeadsPage;
 import pages.LoginPage;
 import org.openqa.selenium.WebDriver;
+import pages.QuotePage;
 
 public class TestContext {
     private final LoginPage loginPage;
     private final HomePage homePage;
     private final LeadsPage leadsPage;
+    private final QuotePage quotePage;
 
     public TestContext() {
         this.loginPage = new LoginPage();
         this.homePage = new HomePage();
         this.leadsPage = new LeadsPage();
+        this.quotePage = new QuotePage();
     }
 
     public LoginPage getLoginPage() {
@@ -27,5 +30,9 @@ public class TestContext {
 
     public LeadsPage getLeadsPage() {
         return leadsPage;
+    }
+
+    public QuotePage getQuotePage() {
+        return quotePage;
     }
 }
