@@ -122,6 +122,15 @@ public class BasePage {
         return (long) Math.floor(Math.random() * 9_000_000_000L) + 1_000_000_000L;
     }
 
+    protected void enterText(WebElement element, String text) {
+        try {
+            waitForVisibilityOfElement(element);
+            sendKeys(element, text);
+            logger.info("Entered random text '{}' into element: {}", text, element);
+        } catch (Exception e) {
+            throw new RuntimeException("Unable to enter text into element: " + e);
+        }
+    }
     protected void enterAndSelectTheText(WebElement element, String text) {
         try {
             waitForVisibilityOfElement(element);

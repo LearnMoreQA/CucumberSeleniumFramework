@@ -13,7 +13,7 @@ public class LeadsPage extends BasePage {
     private WebElement leadsMenu;
     @FindBy(xpath = "//button[@class='btn btn-primary o_list_button_add']")
     private WebElement createButton;
-    @FindBy(name = "insurance_type")
+    @FindBy(id = "insurance_type")
     private WebElement classOfInsuranceDropdown;
     @FindBy(xpath = "//table[@class='o_group o_inner_group']/tbody/tr/td[4]/select[@class='o_input o_field_widget o_required_modifier']")
     private WebElement typeOfCustomerDropdown;
@@ -59,11 +59,11 @@ public class LeadsPage extends BasePage {
     private WebElement loadingIndicator;
     @FindBy(xpath = "//td[@title='KYC Documents']/following-sibling::td/child::div[@name='document_file_id']/parent::td")
     private WebElement uploadButtonColumn;
-    @FindBy(xpath = "//li[text()='New']")
+    @FindBy(xpath = "//*[text()='New']")
     private WebElement newTextHeader;
     @FindBy(xpath = "//button[contains(@class,'o_form_button_edit')]")
     private WebElement editButton;
-    @FindBy(xpath = "//li[text()='Leads']")
+    @FindBy(xpath = "//span[text()='Leads']")
     private WebElement leadsTextHeader;
     @FindBy(xpath = "//span[text()='Convert to Opportunity']/parent::button")
     private WebElement convertToOpportunityButton;
@@ -103,7 +103,6 @@ public class LeadsPage extends BasePage {
     private WebElement sendButton;
     @FindBy(xpath = "//div[@name='underwriter_id']/child::div/input")
     private WebElement underwriterField;
-
     @FindBy(xpath = "(//a[text()='Add a line'])[4]")
     private WebElement addPaymentLineButton;
     @FindBy(xpath = "//div[@name='document_id']/child::div/input")
@@ -121,11 +120,11 @@ public class LeadsPage extends BasePage {
     public void clickCreateButton() {
         click(createButton);
         waitForVisibilityOfElement(newTextHeader);
-        waitForLoadingToDisappear(loadingIndicator);
+        //waitForLoadingToDisappear(loadingIndicator);
     }
 
     public void selectClassOfInsurance() {
-        waitForLoadingToDisappear(loadingIndicator);
+        //waitForLoadingToDisappear(loadingIndicator);
         selectDropdown(classOfInsuranceDropdown, "Medical");
     }
 
@@ -142,9 +141,9 @@ public class LeadsPage extends BasePage {
     }
 
     public void clickSave() {
-        waitForLoadingToDisappear(loadingIndicator);
+        //waitForLoadingToDisappear(loadingIndicator);
         click(saveButton);
-        waitForLoadingToDisappear(loadingIndicator);
+        //waitForLoadingToDisappear(loadingIndicator);
     }
 
     public void selectCustomer() {
@@ -209,7 +208,7 @@ public class LeadsPage extends BasePage {
 
     public void clickEditButton() {
         click(editButton);
-        waitForLoadingToDisappear(loadingIndicator);
+        //waitForLoadingToDisappear(loadingIndicator);
     }
 
     public void clickCensusLinesTab() {
@@ -245,7 +244,7 @@ public class LeadsPage extends BasePage {
         click(convertToOpportunityButton);
     }
     public void clickNewQuotation() {
-        waitForLoadingToDisappear(loadingIndicator);
+        //waitForLoadingToDisappear(loadingIndicator);
         click(newQuotationButton);
     }
     public void uploadPaymentReceipt() {
@@ -261,15 +260,15 @@ public class LeadsPage extends BasePage {
 
     public void clickPolicyMenu() {
         click(policyMenu);
-        waitForLoadingToDisappear(loadingIndicator);
+        //waitForLoadingToDisappear(loadingIndicator);
     }
     public void clickIssuePolicyButton() {
         click(issuePolicyButton);
-        waitForLoadingToDisappear(loadingIndicator);
+        //waitForLoadingToDisappear(loadingIndicator);
     }
     public void clickReconcileButton() {
         click(reconcileButton);
-        waitForLoadingToDisappear(loadingIndicator);
+        //waitForLoadingToDisappear(loadingIndicator);
     }
     public void completePolicyDetails() {
         sendKeys(policyNumberField, generateRandomNumber(7));
@@ -277,7 +276,7 @@ public class LeadsPage extends BasePage {
         sendKeys(invoiceNumberField, generateRandomNumber(7));
         enterSaleSupportUnderwriter();
         selectCustomDate(policyStartDateField, 1);
-        waitForLoadingToDisappear(loadingIndicator);
+        //waitForLoadingToDisappear(loadingIndicator);
         if (policyEndDateField.getText() == null) {
             selectCustomDate(policyEndDateField, 365);
         }
@@ -289,18 +288,18 @@ public class LeadsPage extends BasePage {
     public void uploadPolicyDocument() {
         click(policyDocAddButton);
         enterAndSelectTheText(documentDropdown, "Loss report");
-        waitForLoadingToDisappear(loadingIndicator);
+        //waitForLoadingToDisappear(loadingIndicator);
         uploadFileUsingJs(policyDocUploadFileButton,"pdf_testdata.pdf");
         waitForInvisibilityOfElement(policyDocUploadFileButton);
-        waitForLoadingToDisappear(loadingIndicator);
+        //waitForLoadingToDisappear(loadingIndicator);
     }
     public void clickInvoiceButton() {
         click(invoiceButton);
-        waitForLoadingToDisappear(loadingIndicator);
+        //waitForLoadingToDisappear(loadingIndicator);
     }
     public void clickSendButton() {
         click(sendButton);
-        waitForLoadingToDisappear(loadingIndicator);
+        //waitForLoadingToDisappear(loadingIndicator);
         waitForInvisibilityOfElement(sendButton);
     }
 }

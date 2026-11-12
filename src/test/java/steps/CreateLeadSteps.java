@@ -21,7 +21,6 @@ public class CreateLeadSteps {
 
     @And("user clicks CRM link in home page")
     public void userClicksOnCrmLink() {
-        testContext.getHomePage().acceptDisclaimerIfPresent();
         testContext.getHomePage().selectDiscuss();
         testContext.getHomePage().clickCrm();
     }
